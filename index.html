@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --ink: #1a1814;
+    --ink2: #6b6760;
+    --ink3: #a8a49f;
+    --accent: #2a5fff;
+    --accent2: #e8f0ff;
+    --border: #e2dfd9;
+    --card: #ffffff;
+    --tag-cs: #f0f4ff;
+    --tag-cs-text: #2a5fff;
+    --tag-web: #f0fff8;
+    --tag-web-text: #0a8a5c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Noise texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {}
+
+  .name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 6vw, 56px);
+    line-height: 1;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink3);
+    letter-spacing: 0.5px;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent2);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid #c8d8ff;
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #2a5fff;
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .skills-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .skill-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink2);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  /* ── Section ── */
+  section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-of-type { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both 0.1s;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink3);
+  }
+
+  /* ── Project Cards ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid { grid-template-columns: 1fr; }
+    .header-right { align-items: flex-start; }
+    .skills-row { justify-content: flex-start; }
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: fadeUp 0.5s ease both;
+    cursor: default;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    border-color: #d0cdc8;
+  }
+
+  .card-preview {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* C# App previews */
+  .preview-expense {
+    background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+  }
+
+  .preview-timer {
+    background: linear-gradient(135deg, #f8fff9 0%, #edfff4 100%);
+  }
+
+  .preview-notes {
+    background: linear-gradient(135deg, #fffaf8 0%, #fff3ee 100%);
+  }
+
+  /* Web previews */
+  .preview-saas {
+    background: linear-gradient(135deg, #0f0f14 0%, #1a1a2e 100%);
+  }
+
+  .preview-agency {
+    background: linear-gradient(135deg, #fefefe 0%, #f9f5f0 100%);
+  }
+
+  .preview-portfolio {
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8edf2 100%);
+  }
+
+  /* ── Mock UI inside cards ── */
+  .mock-window {
+    width: 80%;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    overflow: hidden;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .mock-titlebar {
+    background: #f0f0f0;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mock-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .mock-dot.r { background: #ff5f57; }
+  .mock-dot.y { background: #febc2e; }
+  .mock-dot.g { background: #28c840; }
+
+  .mock-title { font-size: 10px; color: #888; margin-left: 8px; }
+
+  .mock-body { padding: 12px; }
+
+  .mock-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 9px;
+    color: #555;
+  }
+
+  .mock-row:last-child { border: none; }
+  .mock-amount { font-weight: 500; color: #2a5fff; }
+  .mock-amount.neg { color: #e05555; }
+
+  .mock-btn {
+    margin-top: 8px;
+    background: #2a5fff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    cursor: default;
+  }
+
+  /* Timer mock */
+  .mock-timer {
+    text-align: center;
+    padding: 16px;
+  }
+
+  .mock-time {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: #0a8a5c;
+    letter-spacing: 2px;
+  }
+
+  .mock-label { font-size: 8px; color: #aaa; letter-spacing: 1px; margin-top: 4px; }
+
+  .mock-controls { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
+  .mock-cbtn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    cursor: default;
+    border: none;
+  }
+  .mock-cbtn.start { background: #0a8a5c; color: white; }
+  .mock-cbtn.stop { background: #f0f0f0; color: #555; }
+
+  /* Notes mock */
+  .mock-notes { padding: 10px; }
+  .mock-note-item {
+    padding: 6px 8px;
+    background: #fffbf5;
+    border-left: 2px solid #f0a040;
+    margin-bottom: 6px;
+    border-radius: 0 4px 4px 0;
+    font-size: 8px;
+    color: #555;
+  }
+
+  /* Web mocks */
+  .mock-web {
+    width: 85%;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .mock-browser-bar {
+    background: #1e1e24;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mock-url {
+    background: #2a2a35;
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 8px;
+    color: #888;
+    font-family: 'DM Mono', monospace;
+    flex: 1;
+  }
+
+  .mock-web-body { padding: 14px; }
+
+  /* SaaS dark */
+  .mock-saas-body {
+    background: #0f0f14;
+    padding: 14px;
+  }
+
+  .mock-hero-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .mock-hero-sub { font-size: 8px; color: #666; margin-bottom: 10px; }
+
+  .mock-cta {
+    display: inline-block;
+    background: #2a5fff;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Agency light */
+  .mock-agency-body { background: #fefefe; padding: 14px; }
+  .mock-agency-nav { display: flex; gap: 8px; margin-bottom: 12px; }
+  .mock-nav-item { font-size: 8px; color: #aaa; font-family: 'DM Mono', monospace; }
+  .mock-nav-item.active { color: #1a1814; font-weight: 500; }
+  .mock-agency-hero { font-family: 'DM Serif Display', serif; font-size: 14px; color: #1a1814; margin-bottom: 6px; }
+  .mock-agency-line { height: 1px; background: #f0ede8; margin: 8px 0; }
+  .mock-agency-cards { display: flex; gap: 6px; }
+  .mock-agency-card { flex: 1; height: 30px; background: #f5f3ef; border-radius: 3px; }
+
+  /* Dev portfolio mock */
+  .mock-dev-body { background: #f0f4f8; padding: 14px; }
+  .mock-dev-name { font-family: 'DM Serif Display', serif; font-size: 13px; color: #1a1814; }
+  .mock-dev-role { font-size: 7px; color: #888; font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+  .mock-dev-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+  .mock-dev-chip { font-size: 7px; background: white; border: 1px solid #ddd; padding: 2px 6px; border-radius: 3px; color: #555; font-family: 'DM Mono', monospace; }
+
+  /* Card body */
+  .card-body { padding: 20px 24px 24px; }
+
+  .card-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-type.cs { color: var(--tag-cs-text); }
+  .card-type.web { color: var(--tag-web-text); }
+
+  .card-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  .tag.cs { background: var(--tag-cs); color: var(--tag-cs-text); }
+  .tag.web { background: var(--tag-web); color: var(--tag-web-text); }
+  .tag.neutral { background: #f5f3ef; color: var(--ink2); }
+
+  /* ── About ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    animation: fadeUp 0.5s ease both 0.2s;
+  }
+
+  @media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
+
+  .about-block {}
+
+  .about-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--ink3);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .about-text {
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 1.7;
+  }
+
+  .about-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .about-list li {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .about-list li::before {
+    content: '→';
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    letter-spacing: 0.5px;
+  }
+
+  .footer-accent { color: var(--accent); }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+  .card:nth-child(4) { animation-delay: 0.26s; }
+  .card:nth-child(5) { animation-delay: 0.33s; }
+  .card:nth-child(6) { animation-delay: 0.40s; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <h1 class="name">Software <em>Developer</em></h1>
+        <p class="tagline">CSharp · .NET · HTML · CSS · Web Design</p>
+      </div>
+      <div class="header-right">
+        <div class="badge">
+          <span class="dot"></span>
+          Available for work
+        </div>
+        <div class="skills-row">
+          <span class="skill-chip">CSharp</span>
+          <span class="skill-chip">.NET</span>
+          <span class="skill-chip">HTML</span>
+          <span class="skill-chip">CSS</span>
+          <span class="skill-chip">Desktop Apps</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Projects -->
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Projects</h2>
+      <span class="section-count">06 works</span>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- 1. Expense Tracker C# -->
+      <div class="card">
+        <div class="card-preview preview-expense">
+          <div class="mock-window">
+            <div class="mock-titlebar">
+              <span class="mock-dot r"></span>
+              <span class="mock-dot y"></span>
+              <span class="mock-dot g"></span>
+              <span class="mock-title">ExpenseTracker.exe</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-row"><span>Groceries</span><span class="mock-amount neg">-€42.50</span></div>
+              <div class="mock-row"><span>Freelance</span><span class="mock-amount">+€320.00</span></div>
+              <div class="mock-row"><span>Transport</span><span class="mock-amount neg">-€18.00</span></div>
+              <div class="mock-row"><span>Balance</span><span class="mock-amount">+€259.50</span></div>
+              <button class="mock-btn">+ Add Entry</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-type cs">CSharp · Desktop</p>
+          <h3 class="card-name">Expense Tracker</h3>
+          <p class="card-desc">Windows desktop application to track income and expenses. Supports categories, monthly reports, and CSV export. Built with CSharp and WinForms.</p>
+          <div class="card-tags">
+            <span class="tag cs">CSharp</span>
+            <span class="tag cs">.NET</span>
+            <span class="tag cs">WinForms</span>
+            <span class="tag neutral">CSV Export</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Pomodoro Timer C# -->
+      <div class="card">
+        <div class="card-preview preview-timer">
+          <div class="mock-window">
+            <div class="mock-titlebar">
+              <span class="mock-dot r"></span>
+              <span class="mock-dot y"></span>
+              <span class="mock-dot g"></span>
+              <span class="mock-title">PomodoroTimer.exe</span>
+            </div>
+            <div class="mock-timer">
+              <div class="mock-time">24:59</div>
+              <div class="mock-label">FOCUS SESSION · 3 of 4</div>
+              <div class="mock-controls">
+                <button class="mock-cbtn start">▶ Start</button>
+                <button class="mock-cbtn stop">■ Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-type cs">CSharp · Desktop</p>
+          <h3 class="card-name">Pomodoro Timer</h3>
+          <p class="card-desc">Productivity desktop tool implementing the Pomodoro technique. Configurable work/break intervals, session counter, and system tray notifications.</p>
+          <div class="card-tags">
+            <span class="tag cs">CSharp</span>
+            <span class="tag cs">.NET</span>
+            <span class="tag neutral">System Tray</span>
+            <span class="tag neutral">Notifications</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Notes App C# -->
+      <div class="card">
+        <div class="card-preview preview-notes">
+          <div class="mock-window">
+            <div class="mock-titlebar">
+              <span class="mock-dot r"></span>
+              <span class="mock-dot y"></span>
+              <span class="mock-dot g"></span>
+              <span class="mock-title">QuickNotes.exe</span>
+            </div>
+            <div class="mock-notes">
+              <div class="mock-note-item">📌 Meeting with client at 3pm — confirm agenda</div>
+              <div class="mock-note-item">💡 Add dark mode to the settings panel</div>
+              <div class="mock-note-item">✅ Send invoice for project #004</div>
+              <button class="mock-btn">+ New Note</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-type cs">CSharp · Desktop</p>
+          <h3 class="card-name">QuickNotes</h3>
+          <p class="card-desc">Lightweight note-taking desktop app with pinning, color labels, and local storage. Minimal interface designed for speed and daily use.</p>
+          <div class="card-tags">
+            <span class="tag cs">CSharp</span>
+            <span class="tag cs">WPF</span>
+            <span class="tag neutral">Local Storage</span>
+            <span class="tag neutral">Search</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. SaaS Landing Page -->
+      <div class="card">
+        <div class="card-preview preview-saas">
+          <div class="mock-web">
+            <div class="mock-browser-bar">
+              <span class="mock-dot r"></span>
+              <span class="mock-dot y"></span>
+              <span class="mock-dot g"></span>
+              <div class="mock-url">saas-landing.html</div>
+            </div>
+            <div class="mock-saas-body">
+              <div class="mock-hero-text">Ship faster.<br>Build better.</div>
+              <div class="mock-hero-sub">The all-in-one platform for modern teams.</div>
+              <span class="mock-cta">Get started free →</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-type web">HTML · Web Design</p>
+          <h3 class="card-name">SaaS Landing Page</h3>
+          <p class="card-desc">Dark-themed landing page for a software product. Includes hero section, feature grid, pricing table, and CTA. Fully responsive, pure HTML and CSS.</p>
+          <div class="card-tags">
+            <span class="tag web">HTML</span>
+            <span class="tag web">CSS</span>
+            <span class="tag neutral">Responsive</span>
+            <span class="tag neutral">Dark Theme</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Agency Website -->
+      <div class="card">
+        <div class="card-preview preview-agency">
+          <div class="mock-web">
+            <div class="mock-browser-bar">
+              <span class="mock-dot r"></span>
+              <span class="mock-dot y"></span>
+              <span class="mock-dot g"></span>
+              <div class="mock-url">agency-site.html</div>
+            </div>
+            <div class="mock-agency-body">
+              <div class="mock-agency-nav">
+                <span class="mock-nav-item active">Work</span>
+                <span class="mock-nav-item">About</span>
+                <span class="mock-nav-item">Contact</span>
+              </div>
+              <div class="mock-agency-hero">We craft digital<br>experiences.</div>
+              <div class="mock-agency-line"></div>
+              <div class="mock-agency-cards">
+                <div class="mock-agency-card"></div>
+                <div class="mock-agency-card"></div>
+                <div class="mock-agency-card"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-type web">HTML · Web Design</p>
+          <h3 class="card-name">Creative Agency Site</h3>
+          <p class="card-desc">Clean multi-section website for a design agency. Includes animated navigation, portfolio grid, and contact form. Built with semantic HTML and modern CSS.</p>
+          <div class="card-tags">
+            <span class="tag web">HTML</span>
+            <span class="tag web">CSS</span>
+            <span class="tag neutral">Animations</span>
+            <span class="tag neutral">Multi-section</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Developer Portfolio -->
+      <div class="card">
+        <div class="card-preview preview-portfolio">
+          <div class="mock-web">
+            <div class="mock-browser-bar">
+              <span class="mock-dot r"></span>
+              <span class="mock-dot y"></span>
+              <span class="mock-dot g"></span>
+              <div class="mock-url">dev-portfolio.html</div>
+            </div>
+            <div class="mock-dev-body">
+              <div class="mock-dev-name">Full-Stack Developer</div>
+              <div class="mock-dev-role">Available for freelance · Remote</div>
+              <div class="mock-dev-chips">
+                <span class="mock-dev-chip">CSharp</span>
+                <span class="mock-dev-chip">HTML</span>
+                <span class="mock-dev-chip">CSS</span>
+                <span class="mock-dev-chip">.NET</span>
+                <span class="mock-dev-chip">WinForms</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-type web">HTML · Web Design</p>
+          <h3 class="card-name">Developer Portfolio</h3>
+          <p class="card-desc">Personal portfolio website template with project cards, skills section, and contact area. Minimal design, fast loading, no frameworks — pure HTML and CSS.</p>
+          <div class="card-tags">
+            <span class="tag web">HTML</span>
+            <span class="tag web">CSS</span>
+            <span class="tag neutral">No Framework</span>
+            <span class="tag neutral">Fast Load</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About -->
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-block">
+        <p class="about-label">Who I am</p>
+        <p class="about-text">Computer Science student with a strong focus on building clean, functional software. I work on desktop applications with CSharp and web interfaces with HTML and CSS. I care about code quality, clear communication, and delivering work that actually solves the problem.</p>
+      </div>
+      <div class="about-block">
+        <p class="about-label">What I offer</p>
+        <ul class="about-list">
+          <li>Windows desktop apps in CSharp / .NET</li>
+          <li>Automation tools and utility software</li>
+          <li>Landing pages and multi-section websites</li>
+          <li>Figma to HTML/CSS conversion</li>
+          <li>Clean, well-commented code</li>
+          <li>Fast delivery and clear communication</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-text">Available on <span class="footer-accent">Fiverr</span> · Open to freelance projects</p>
+  </footer>
+
+</div>
+</body>
+</html>
